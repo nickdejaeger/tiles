@@ -1,23 +1,23 @@
 <script setup lang="ts">
-    import tiles from '~/content/tiles.json';
-    import words from '~/content/words_dictionary.json';
-
-    const min = 0;
-    const max = Object.keys(words).length;
-
-    const wordsArray = Object.keys(words).slice(3000, 4000);
-
-    console.log(min, max);
+    const user = useSupabaseUser()
 </script>
 
 <template>
-    <TilesGrid>
-        <TilesTile v-for="(word, index) in wordsArray" :key="index" :title="word" />
-        <TilesTile
-            v-for="(tile, index) in tiles.tiles"
-            :key="index"
-            :title="tile.title"
-            :status="tile.active"
-        />
-    </TilesGrid>
+    <Account v-if="user" />
+
+    <div v-else class="auth-options">
+        <SignUp />
+        or
+        <SignIn />
+    </div>
 </template>
+
+<style scoped lang="scss">
+.auth-options {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 8rem;
+}
+</style>

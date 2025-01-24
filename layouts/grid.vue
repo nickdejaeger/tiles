@@ -1,6 +1,7 @@
 <template>
     <slot />
     <AppNavbar />
+    <TilesUserinfo />
 </template>
 
 <style>

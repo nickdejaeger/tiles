@@ -1,9 +1,16 @@
 <script setup lang="ts">
+const supabase = useSupabaseClient()
+const user = useSupabaseUser()
+
 const abc = ref({
     1: 'a',
     2: 'b',
     3: 'c'
 });
+
+async function signOut() {
+    const { error } = await supabase.auth.signOut()
+}
 </script>
 
 <template>
@@ -14,7 +21,10 @@ const abc = ref({
                 <li v-for="(link, index) in abc" :key="index">/ <NuxtLink :to="link">{{ link.toUpperCase() }}</NuxtLink></li>
             </ul>
         </div>
-        <div>MENU</div>
+        <div>
+            <button v-if="user" @click="signOut">Sign Out</button>
+            <div>MENU</div>
+        </div>
     </nav>
 </template>
 
@@ -48,6 +58,19 @@ nav {
         li {
             display: inline-flex;
             gap: .5rem;
+        }
+    }
+
+    button {
+        border: 0;
+        background-color: #e51919;
+        color: white;
+        border-radius: 0.25rem;
+        padding: 0.35rem 0.45rem;
+        cursor: pointer;
+
+        &:hover {
+            background-color: red;
         }
     }
 }

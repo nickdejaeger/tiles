@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+    layout: 'grid'
+})
+
 const route = useRoute()
 const letter = route.params.letter as string
 

@@ -2,9 +2,6 @@
     <section class="dashboard">
         <AdminPanelCategoriesList class="dashboard__panel" />
         <AdminPanelCategoriesAdd class="dashboard__panel" />
-
-        
-
         <AdminPanelTilesList class="dashboard__panel" />
     </section>
 </template>

@@ -92,6 +92,7 @@ const addCategory = async (name) => {
                 <div class="flex flex-row">
                     <input id="newCategoryName" type="text" v-model="newCategoryName" />
                     <button
+                        class="btn"
                         type="submit"
                         :disabled="loading"
                     >{{ loading ? 'Loading ...' : 'Add categroy' }}</button>

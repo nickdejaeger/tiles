@@ -29,6 +29,7 @@ const handleLogin = async () => {
             <input type="email" placeholder="Your email" v-model="email" />
             <input type="password" placeholder="Your password" v-model="password" />
             <button
+            class="btn"
                 type="submit"
                 :disabled="loading"
             >{{ loading ? 'Loading' : 'Sign IN' }}</button>

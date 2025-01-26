@@ -63,13 +63,17 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <h1>Tiles for {{ letter.toUpperCase() }}</h1>
+    <header class="px-12">
+        <h1>Tiles for {{ letter.toUpperCase() }}</h1>
+    </header>
     
     <p v-if="!words && !error">Loading...</p>
     <p v-if="error" v-html="error"></p>
 
     <TilesGrid v-if="words">
-        <TilesTile v-for="(word, index) in words" :key="index" :title="word" />
+        <TilesTile v-for="(word, index) in words" :key="index" :title="word">
+            {{ word }}
+        </TilesTile>
     </TilesGrid>
 
     <div class="data-info" v-if="ended">

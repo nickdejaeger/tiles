@@ -34,7 +34,7 @@ input {
         opacity: .5;
     }
 }
-button {
+.btn {
     border: 0;
     outline: 0;
     padding: 0.75rem 1rem;

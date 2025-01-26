@@ -4,6 +4,7 @@ definePageMeta({
 })
 
 const supabase = useSupabaseClient()
+const user = useSupabaseUser()
 
 let LIMIT = ref<number>(50);
 let NEXT_LOAD = ref<number>(20);
@@ -13,89 +14,25 @@ let ended = ref<boolean>(false);
 
 const dbTiles = ref<object | null>(null);
 const error = ref<string | null>(null);
-const tileStatus = ref<string | null>(null);
-const newTile = ref<string>('')
 
+const userId = ref<string | null>(null);
 
 const fetchTiles = async () => {
     try {
-        // Look if record exists
         const { data, error } = await supabase
             .from('tiles')
             .select(`id, title`)
             .order('created_at', { ascending: false })
 
-        dbTiles.value = data.slice(0, LIMIT.value);
-        // Count max number of words
-        max.value = data.length;
-
+        if (data) {
+            dbTiles.value = data.slice(0, LIMIT.value);
+            max.value = data.length;
+        }
         return data
     } catch (error) {
         console.log('Catch error: ', error)
     }
 }
-
-
-
-
-
-
-
-
-const addTile = async (title: string) => {
-    try {
-        // Look if record exists
-        const { data: findRecord, error } = await supabase
-            .from('tiles')
-            .select("*")
-            .eq('title', title);
-
-        if (findRecord?.length === 0) {
-            tileStatus.value = 'anim-tile-added';
-        }
-
-        if (findRecord?.length !== 0) {
-            tileStatus.value = 'anim-tile-exists';
-        }
-
-        setTimeout(() => {
-            tileStatus.value = null;
-        }, 1000);
-
-        // If record does not exist
-        if (findRecord?.length === 0) {
-            const { error } = await supabase
-                .from('tiles')
-                .insert([{ title: title}], { ignoreDuplicates: true })
-
-            fetchTiles()
-        }
-
-        // Empty field for new input
-        newTile.value = ''
-    } catch (error) {
-        console.log('Catch error: ', error)
-    }
-}
-
-const deleteTile = async (id: number) => {
-    try {
-        const response = await supabase
-            .from('tiles')
-            .delete()
-            .eq('id', id)
-
-        fetchTiles()
-        //console.log('Delete response: ', response.status)
-    }
-    catch (error) {
-        console.log('Catch error: ', error)
-    }
-}
-
-
-
-
 
 const handleScroll = () => {
     const scrollTop = window.scrollY;
@@ -116,6 +53,13 @@ const handleScroll = () => {
 
 // Listen for scroll event when component is mounted
 onMounted(() => {
+    if (user.value) {
+        console.log('index.vue: ' + user.value.id);
+        userId.value = user.value.id
+    } else {
+        console.error('User is not logged in');
+    }
+
     fetchTiles()
     window.addEventListener('scroll', handleScroll);
 });
@@ -136,12 +80,13 @@ onBeforeUnmount(() => {
     <p v-if="error" v-html="error"></p>
 
     <TilesGrid v-if="dbTiles">
-        <form :class="tileStatus">
-            <input type="text" name="" id="" v-model="newTile">
-            <button @click.prevent="addTile(newTile)">Add</button>
-        </form>
-        <TilesTile v-for="(tile, index) in dbTiles" :key="index" :id="tile.id" :title="tile.title">
-            <button class="btn-delete" @click="deleteTile(tile.id)">Delete</button>
+        <TilesTile v-for="(tile, index) in dbTiles"
+            :key="index"
+            :id="tile.id"
+            :title="tile.title"
+            :profileId="userId"
+        >
+            {{ tile.title }}
         </TilesTile>
     </TilesGrid>
 
@@ -156,42 +101,18 @@ onBeforeUnmount(() => {
 
 
 <style scoped lang="scss">
-form {
-    position: relative;
-    border-radius: 3rem 1rem;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    background-color: rgb(233, 233, 233);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    font-size: 16px;
-
-    input {
-        width: 100%;
-        margin-bottom: 1rem;
-        text-align: center;
-    }
-}
-
 .btn-delete {
-    position: absolute;
-    top: .5rem;
-    right: .5rem;
     z-index: 9;
     border: 0;
-    background-color: #e51919;
-    color: white;
+    background-color: transparent;
+    color: red;
     border-radius: .5rem;
-    padding: 0.35rem 0.5rem;
+    padding: 0;
     cursor: pointer;
     font-size: 13px;
 
-
-    &:hover {
-        background-color: red;
+    svg {
+        stroke: red;
     }
 }
 

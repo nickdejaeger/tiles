@@ -4,7 +4,7 @@ const supabaseUrl = process.env.SUPABASE_URL || 'https://supabase-url.supabase.c
 const supabaseKey = process.env.SUPABASE_KEY || 'supabase-key'
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async () => {
     const { data, error } = await supabase
         .from('tiles')
         .select('*')

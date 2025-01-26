@@ -1,10 +1,4 @@
 <template>
-    <slot />
     <AppNavbar />
+    <slot />
 </template>
-
-<style>
-body {
-    margin: 69px 1rem 1rem;
-}
-</style>

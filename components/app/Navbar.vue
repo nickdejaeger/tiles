@@ -1,16 +1,9 @@
 <script setup lang="ts">
-const supabase = useSupabaseClient()
-const user = useSupabaseUser()
-
 const abc = ref({
     1: 'a',
     2: 'b',
     3: 'c'
 });
-
-async function signOut() {
-    const { error } = await supabase.auth.signOut()
-}
 </script>
 
 <template>
@@ -18,28 +11,27 @@ async function signOut() {
         <div>
             <div><NuxtLink to="/">HOME</NuxtLink></div>
             <ul>
+                <li><NuxtLink to="/admin">Admin</NuxtLink></li>/
+                <li><NuxtLink to="/about">About</NuxtLink></li>
                 <li v-for="(link, index) in abc" :key="index">/ <NuxtLink :to="link">{{ link.toUpperCase() }}</NuxtLink></li>
             </ul>
         </div>
         <div>
-            <button v-if="user" @click="signOut">Sign Out</button>
-            <div>MENU</div>
+            <AppLogoutButton />
         </div>
     </nav>
 </template>
 
 <style scoped lang="scss">
 nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     padding: 1.5rem 3rem;
     background: #FFF;
     z-index: 3;
+    background-color: #f5d4da;
+    margin: 0 0 2rem;
 
     div {
         display: flex;
@@ -66,12 +58,24 @@ nav {
         background-color: #e51919;
         color: white;
         border-radius: 0.25rem;
-        padding: 0.35rem 0.45rem;
+        padding: 0.35rem 0.5rem;
         cursor: pointer;
+        font-size: 13px;
+
 
         &:hover {
             background-color: red;
         }
+    }
+}
+
+
+@media (min-width: 768px) {
+    nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
     }
 }
 </style>

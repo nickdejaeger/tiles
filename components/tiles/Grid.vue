@@ -11,6 +11,7 @@
     grid-template-rows: repeat(1, 1fr);
     grid-gap: 0.5rem;
     gap: 1rem;
+    margin: 1rem;
 }
 
 @media (min-width: 320px) {

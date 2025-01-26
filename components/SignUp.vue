@@ -9,29 +9,24 @@ const handleLogin = async () => {
     try {
         loading.value = true
 
-        const { data, error } = await supabase.auth.signUp({ 
+        const { data, error: authError } = await supabase.auth.signUp({ 
             email: email.value,
             password: password.value
         })
 
-        if (error) throw error
+        if (authError) throw new Error(authError.message)
 
         // Assuming the user's ID is the UUID
         const userId = data.user.id
-
-        console.log('User ID:', userId)
         
         // Insert into profiles table
-        const { insertError } = await supabase
-            .from('profiles')
-            .insert({
-                id: userId,  // UUID for the user
-                created_at: new Date().toISOString()
-            })
+        const { error: insertError } = await supabase.from('profiles')
+            .insert([{
+                user_id: userId
+            }])
 
-        if (insertError) throw insertError
-
-        //alert('Signed UP!')
+        if (insertError) throw new Error(insertError.message)
+        if (!error) await navigateTo('/')
     } catch (error) {
         alert(error.error_description || error.message)
     } finally {
@@ -46,11 +41,10 @@ const handleLogin = async () => {
             <h1>Sign UP</h1>
             <input type="email" placeholder="Your email" v-model="email" />
             <input type="password" placeholder="Your password" v-model="password" />
-            <input
+            <button
                 type="submit"
-                :value="loading ? 'Loading' : 'Sign UP'"
                 :disabled="loading"
-            />
+            >{{ loading ? 'Loading' : 'Sign UP' }}</button>
         </form>
     </section>
 </template>
@@ -62,8 +56,7 @@ section {
 form {
     display: inline-block;
     padding: 2rem;
-    background-color: rgba(0,0,0,.1);
-    border-radius: 2rem;
+    background-color: rgba(0,0,0,.05);
 
     display: flex;
     flex-direction: column;
@@ -71,12 +64,20 @@ form {
     justify-content: flex-start;
     gap: 1rem;
 
+    background-color: #7530e8;
+    color: white;
+
     h1 {
         margin: 0;
     }
 
     input {
         display: inline-block;
+        color: white;
+
+        &::placeholder {
+            color: #ffffff4d;
+        }
     }
 }
 </style>

@@ -1,11 +1,5 @@
 <template>
-    <slot />
     <AppNavbar />
+    <slot />
     <TilesUserinfo />
 </template>
-
-<style>
-body {
-    margin: 69px 1rem 1rem;
-}
-</style>

@@ -2,8 +2,8 @@
 const supabase = useSupabaseClient()
 
 const loading = ref(false)
-const email = ref('')
-const password = ref('')
+const email = ref('nickdejaeger@hotmail.com')
+const password = ref('testtest')
 
 const handleLogin = async () => {
     try {
@@ -13,7 +13,7 @@ const handleLogin = async () => {
             password: password.value,
         })
         if (error) throw error
-        //alert('Logged in!')
+        if (!error) await navigateTo('/')
     } catch (error) {
         alert(error.error_description || error.message)
     } finally {
@@ -28,11 +28,10 @@ const handleLogin = async () => {
             <h1>Sign IN</h1>
             <input type="email" placeholder="Your email" v-model="email" />
             <input type="password" placeholder="Your password" v-model="password" />
-            <input
-            type="submit"
-            :value="loading ? 'Loading' : 'Sign IN'"
-            :disabled="loading"
-            />
+            <button
+                type="submit"
+                :disabled="loading"
+            >{{ loading ? 'Loading' : 'Sign IN' }}</button>
         </form>
     </section>
 </template>
@@ -44,8 +43,6 @@ section {
 form {
     display: inline-block;
     padding: 2rem;
-    background-color: rgba(0,0,0,.1);
-    border-radius: 2rem;
 
     display: flex;
     flex-direction: column;
@@ -53,12 +50,18 @@ form {
     justify-content: flex-start;
     gap: 1rem;
 
+    background-color: #a5ffa5;
+
     h1 {
         margin: 0;
     }
 
     input {
         display: inline-block;
+
+        &::placeholder {
+            color: #0000004d;
+        }
     }
 }
 </style>
